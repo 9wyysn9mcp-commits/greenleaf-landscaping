@@ -87,6 +87,9 @@ Reply directly to {email} or call/text {phone}.
         print(f"[email] Failed to send notification: {e}")
 
 
+init_db()
+
+
 @app.route("/")
 def index():
     return render_template("index.html", business_name=BUSINESS_NAME)
