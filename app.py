@@ -12,7 +12,7 @@ app.secret_key = "change-this-secret-key-in-production"
 BUSINESS_NAME  = "GreenLeaf Landscaping"
 ADMIN_PASSWORD = "greenleaf2024"
 
-NOTIFY_EMAIL   = "Nicolas.lemieux28@icloud.com"
+NOTIFY_EMAIL   = "nicolas.lemieux28@icloud.com"
 RESEND_API_KEY = os.environ.get("RESEND_API_KEY", "")
 
 DB_PATH = os.environ.get("DB_PATH", os.path.join(os.path.dirname(__file__), "quotes.db"))
@@ -65,7 +65,7 @@ Reply directly to {email} or call/text {phone}.
 """.strip()
 
     payload = json.dumps({
-        "from":    "GreenLeaf Landscaping <onboarding@resend.dev>",
+        "from":    "onboarding@resend.dev",
         "to":      [NOTIFY_EMAIL],
         "subject": f"New Quote Request — {name}",
         "text":    body,
