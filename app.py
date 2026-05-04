@@ -97,31 +97,41 @@ def index():
 
 @app.route("/quote", methods=["POST"])
 def submit_quote():
-    data = request.get_json()
+    try:
+        data = request.get_json()
 
-    name           = data.get("name", "").strip()
-    email          = data.get("email", "").strip()
-    phone          = data.get("phone", "").strip()
-    address        = data.get("address", "").strip()
-    services       = ", ".join(data.get("services", []))
-    message        = data.get("message", "").strip()
-    preferred_date = data.get("preferred_date", "").strip()
+        name           = data.get("name", "").strip()
+        email          = data.get("email", "").strip()
+        phone          = data.get("phone", "").strip()
+        address        = data.get("address", "").strip()
+        services       = ", ".join(data.get("services", []))
+        message        = data.get("message", "").strip()
+        preferred_date = data.get("preferred_date", "").strip()
 
-    if not name or not email:
-        return jsonify({"success": False, "error": "Name and email are required."}), 400
+        if not name or not email:
+            return jsonify({"success": False, "error": "Name and email are required."}), 400
 
-    with get_db() as conn:
-        conn.execute(
-            """INSERT INTO quotes (name, email, phone, address, services, message, preferred_date, submitted_at)
-               VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
-            (name, email, phone, address, services, message, preferred_date,
-             datetime.now().strftime("%Y-%m-%d %H:%M:%S")),
-        )
-        conn.commit()
+        # Email first — always runs even if DB fails
+        send_notification(name, email, phone, address, services, message, preferred_date)
 
-    send_notification(name, email, phone, address, services, message, preferred_date)
+        # Save to DB — failure here won't block the response
+        try:
+            with get_db() as conn:
+                conn.execute(
+                    """INSERT INTO quotes (name, email, phone, address, services, message, preferred_date, submitted_at)
+                       VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
+                    (name, email, phone, address, services, message, preferred_date,
+                     datetime.now().strftime("%Y-%m-%d %H:%M:%S")),
+                )
+                conn.commit()
+        except Exception as e:
+            print(f"[db] Could not save quote: {e}")
 
-    return jsonify({"success": True, "message": "Quote request received! We'll be in touch soon."})
+        return jsonify({"success": True, "message": "Quote request received! We'll be in touch soon."})
+
+    except Exception as e:
+        print(f"[quote] Error: {e}")
+        return jsonify({"success": False, "error": "Something went wrong. Please call or text us directly at (647) 215-4544."}), 500
 
 
 @app.route("/admin", methods=["GET", "POST"])

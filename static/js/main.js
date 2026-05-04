@@ -74,14 +74,20 @@ form.addEventListener("submit", async (e) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     });
-    const data = await res.json();
+
+    let data;
+    try {
+      data = await res.json();
+    } catch {
+      throw new Error("Something went wrong. Please call or text us at (647) 215-4544.");
+    }
 
     if (data.success) {
       msgDiv.textContent = "✅ " + data.message;
       msgDiv.className = "form-message success";
       form.reset();
     } else {
-      throw new Error(data.error || "Something went wrong.");
+      throw new Error(data.error || "Something went wrong. Please call or text us at (647) 215-4544.");
     }
   } catch (err) {
     msgDiv.textContent = "❌ " + err.message;
