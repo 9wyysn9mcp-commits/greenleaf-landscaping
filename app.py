@@ -65,7 +65,7 @@ Reply directly to {email} or call/text {phone}.
 """.strip()
 
     payload = json.dumps({
-        "from":    "onboarding@resend.dev",
+        "from":    "GreenLeaf Landscaping <quotes@greenleafgta.ca>",
         "to":      [NOTIFY_EMAIL],
         "subject": f"New Quote Request — {name}",
         "text":    body,
