@@ -1,23 +1,19 @@
 from flask import Flask, render_template, request, jsonify, redirect, url_for, session
 import sqlite3
 import os
-import smtplib
 import threading
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
+import urllib.request
+import json
 from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = "change-this-secret-key-in-production"
 
-BUSINESS_NAME   = "GreenLeaf Landscaping"
-ADMIN_PASSWORD  = "greenleaf2024"
+BUSINESS_NAME  = "GreenLeaf Landscaping"
+ADMIN_PASSWORD = "greenleaf2024"
 
-NOTIFY_EMAIL    = "Nicolas.lemieux28@icloud.com"
-SMTP_USER       = "Nicolas.lemieux28@icloud.com"
-SMTP_PASSWORD   = os.environ.get("SMTP_PASSWORD", "yiat-vmdc-xtas-smsi")
-SMTP_HOST       = "smtp.mail.me.com"
-SMTP_PORT       = 587
+NOTIFY_EMAIL   = "Nicolas.lemieux28@icloud.com"
+RESEND_API_KEY = os.environ.get("RESEND_API_KEY", "")
 
 DB_PATH = os.environ.get("DB_PATH", os.path.join(os.path.dirname(__file__), "quotes.db"))
 
@@ -48,9 +44,11 @@ def init_db():
 
 
 def _send_email(name, email, phone, address, services, message, preferred_date):
-    subject = f"New Quote Request — {name}"
-    body = f"""
-New quote request from your website!
+    if not RESEND_API_KEY:
+        print("[email] No RESEND_API_KEY set, skipping.")
+        return
+
+    body = f"""New quote request from your website!
 
 Name:           {name}
 Email:          {email}
@@ -64,27 +62,32 @@ Message:
 
 ---
 Reply directly to {email} or call/text {phone}.
-    """.strip()
+""".strip()
 
-    msg = MIMEMultipart()
-    msg["From"]     = SMTP_USER
-    msg["To"]       = NOTIFY_EMAIL
-    msg["Subject"]  = subject
-    msg["Reply-To"] = email
-    msg.attach(MIMEText(body, "plain"))
+    payload = json.dumps({
+        "from":    "GreenLeaf Landscaping <onboarding@resend.dev>",
+        "to":      [NOTIFY_EMAIL],
+        "subject": f"New Quote Request — {name}",
+        "text":    body,
+        "reply_to": email,
+    }).encode()
 
+    req = urllib.request.Request(
+        "https://api.resend.com/emails",
+        data=payload,
+        headers={
+            "Authorization": f"Bearer {RESEND_API_KEY}",
+            "Content-Type":  "application/json",
+        },
+    )
     try:
-        with smtplib.SMTP(SMTP_HOST, SMTP_PORT, timeout=15) as server:
-            server.starttls()
-            server.login(SMTP_USER, SMTP_PASSWORD)
-            server.sendmail(SMTP_USER, NOTIFY_EMAIL, msg.as_string())
-        print("[email] Notification sent.")
+        with urllib.request.urlopen(req, timeout=10) as res:
+            print(f"[email] Sent — status {res.status}")
     except Exception as e:
         print(f"[email] Failed: {e}")
 
 
 def send_notification_async(name, email, phone, address, services, message, preferred_date):
-    # Run in background thread so it never blocks or times out the request
     t = threading.Thread(
         target=_send_email,
         args=(name, email, phone, address, services, message, preferred_date),
@@ -120,10 +123,8 @@ def submit_quote():
         if not name or not email:
             return jsonify({"success": False, "error": "Name and email are required."}), 400
 
-        # Fire email in background — never blocks the response
         send_notification_async(name, email, phone, address, services, message, preferred_date)
 
-        # Save to DB
         try:
             with get_db() as conn:
                 conn.execute(
@@ -140,7 +141,7 @@ def submit_quote():
         return jsonify({"success": True, "message": "Quote request received! We'll be in touch soon."})
 
     except Exception as e:
-        print(f"[quote] Unexpected error: {e}")
+        print(f"[quote] Error: {e}")
         return jsonify({"success": False, "error": "Something went wrong. Please text us at (647) 215-4544."}), 500
 
 
