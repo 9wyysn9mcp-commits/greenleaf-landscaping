@@ -87,7 +87,10 @@ Reply directly to {email} or call/text {phone}.
         print(f"[email] Failed to send notification: {e}")
 
 
-init_db()
+try:
+    init_db()
+except Exception as e:
+    print(f"[db] Init failed: {e}")
 
 
 @app.route("/")
