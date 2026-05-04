@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, jsonify, redirect, url_for, s
 import sqlite3
 import os
 import smtplib
+import threading
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from datetime import datetime
@@ -9,12 +10,9 @@ from datetime import datetime
 app = Flask(__name__)
 app.secret_key = "change-this-secret-key-in-production"
 
-BUSINESS_NAME = "GreenLeaf Landscaping"
-ADMIN_PASSWORD = "greenleaf2024"  # Change this!
+BUSINESS_NAME   = "GreenLeaf Landscaping"
+ADMIN_PASSWORD  = "greenleaf2024"
 
-# ── Email notification settings ──
-# Use an iCloud app-specific password (NOT your regular iCloud password).
-# Generate one at: appleid.apple.com → Sign-In & Security → App-Specific Passwords
 NOTIFY_EMAIL    = "Nicolas.lemieux28@icloud.com"
 SMTP_USER       = "Nicolas.lemieux28@icloud.com"
 SMTP_PASSWORD   = os.environ.get("SMTP_PASSWORD", "yiat-vmdc-xtas-smsi")
@@ -49,10 +47,7 @@ def init_db():
         conn.commit()
 
 
-def send_notification(name, email, phone, address, services, message, preferred_date):
-    if not SMTP_PASSWORD:
-        return  # skip if not configured yet
-
+def _send_email(name, email, phone, address, services, message, preferred_date):
     subject = f"New Quote Request — {name}"
     body = f"""
 New quote request from your website!
@@ -72,19 +67,30 @@ Reply directly to {email} or call/text {phone}.
     """.strip()
 
     msg = MIMEMultipart()
-    msg["From"]    = SMTP_USER
-    msg["To"]      = NOTIFY_EMAIL
-    msg["Subject"] = subject
+    msg["From"]     = SMTP_USER
+    msg["To"]       = NOTIFY_EMAIL
+    msg["Subject"]  = subject
     msg["Reply-To"] = email
     msg.attach(MIMEText(body, "plain"))
 
     try:
-        with smtplib.SMTP(SMTP_HOST, SMTP_PORT, timeout=10) as server:
+        with smtplib.SMTP(SMTP_HOST, SMTP_PORT, timeout=15) as server:
             server.starttls()
             server.login(SMTP_USER, SMTP_PASSWORD)
             server.sendmail(SMTP_USER, NOTIFY_EMAIL, msg.as_string())
+        print("[email] Notification sent.")
     except Exception as e:
-        print(f"[email] Failed to send notification: {e}")
+        print(f"[email] Failed: {e}")
+
+
+def send_notification_async(name, email, phone, address, services, message, preferred_date):
+    # Run in background thread so it never blocks or times out the request
+    t = threading.Thread(
+        target=_send_email,
+        args=(name, email, phone, address, services, message, preferred_date),
+        daemon=True,
+    )
+    t.start()
 
 
 try:
@@ -101,40 +107,41 @@ def index():
 @app.route("/quote", methods=["POST"])
 def submit_quote():
     try:
-        data = request.get_json()
+        data = request.get_json(force=True, silent=True) or {}
 
-        name           = data.get("name", "").strip()
-        email          = data.get("email", "").strip()
-        phone          = data.get("phone", "").strip()
-        address        = data.get("address", "").strip()
+        name           = str(data.get("name", "")).strip()
+        email          = str(data.get("email", "")).strip()
+        phone          = str(data.get("phone", "")).strip()
+        address        = str(data.get("address", "")).strip()
         services       = ", ".join(data.get("services", []))
-        message        = data.get("message", "").strip()
-        preferred_date = data.get("preferred_date", "").strip()
+        message        = str(data.get("message", "")).strip()
+        preferred_date = str(data.get("preferred_date", "")).strip()
 
         if not name or not email:
             return jsonify({"success": False, "error": "Name and email are required."}), 400
 
-        # Email first — always runs even if DB fails
-        send_notification(name, email, phone, address, services, message, preferred_date)
+        # Fire email in background — never blocks the response
+        send_notification_async(name, email, phone, address, services, message, preferred_date)
 
-        # Save to DB — failure here won't block the response
+        # Save to DB
         try:
             with get_db() as conn:
                 conn.execute(
-                    """INSERT INTO quotes (name, email, phone, address, services, message, preferred_date, submitted_at)
+                    """INSERT INTO quotes
+                       (name, email, phone, address, services, message, preferred_date, submitted_at)
                        VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
                     (name, email, phone, address, services, message, preferred_date,
                      datetime.now().strftime("%Y-%m-%d %H:%M:%S")),
                 )
                 conn.commit()
         except Exception as e:
-            print(f"[db] Could not save quote: {e}")
+            print(f"[db] Save failed: {e}")
 
         return jsonify({"success": True, "message": "Quote request received! We'll be in touch soon."})
 
     except Exception as e:
-        print(f"[quote] Error: {e}")
-        return jsonify({"success": False, "error": "Something went wrong. Please call or text us directly at (647) 215-4544."}), 500
+        print(f"[quote] Unexpected error: {e}")
+        return jsonify({"success": False, "error": "Something went wrong. Please text us at (647) 215-4544."}), 500
 
 
 @app.route("/admin", methods=["GET", "POST"])
@@ -149,8 +156,11 @@ def admin():
     if not session.get("admin"):
         return render_template("admin.html", logged_in=False, business_name=BUSINESS_NAME)
 
-    with get_db() as conn:
-        quotes = conn.execute("SELECT * FROM quotes ORDER BY submitted_at DESC").fetchall()
+    try:
+        with get_db() as conn:
+            quotes = conn.execute("SELECT * FROM quotes ORDER BY submitted_at DESC").fetchall()
+    except Exception:
+        quotes = []
 
     return render_template("admin.html", logged_in=True, quotes=quotes, business_name=BUSINESS_NAME)
 
