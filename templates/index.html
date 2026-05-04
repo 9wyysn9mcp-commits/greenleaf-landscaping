@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ business_name }} – Lawn & Yard Care</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+<body>
+
+  <!-- ─── NAV ─── -->
+  <nav id="navbar">
+    <div class="nav-inner">
+      <a class="logo" href="#home">
+        <span class="logo-leaf">🌿</span>
+        <span>{{ business_name }}</span>
+      </a>
+      <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#gallery">Gallery</a></li>
+        <li><a href="#contact" class="btn-nav">Free Quote</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ─── HERO ─── -->
+  <section id="home" class="hero">
+    <div class="hero-overlay"></div>
+    <div class="hero-trees">
+      <div class="tree tree-1"></div>
+      <div class="tree tree-2"></div>
+      <div class="tree tree-3"></div>
+      <div class="tree tree-4"></div>
+    </div>
+    <div class="hero-content">
+      <p class="hero-tag">Mississauga &amp; Greater Toronto Area</p>
+      <h1>Your Yard, <br /><span class="accent">Our Passion</span></h1>
+      <p class="hero-sub">Professional lawn care and yard cleanup that keeps your property looking its best — all season long.</p>
+      <div class="hero-btns">
+        <a href="#contact" class="btn-primary">Get a Free Quote</a>
+        <a href="#services" class="btn-outline">Our Services</a>
+      </div>
+    </div>
+    <div class="hero-badge">
+      <span class="badge-num">5★</span>
+      <span class="badge-text">Rated by<br />our clients</span>
+    </div>
+    <div class="hero-scroll">
+      <span>Scroll down</span>
+      <i class="fa-solid fa-chevron-down"></i>
+    </div>
+  </section>
+
+  <!-- ─── TRUST BAR ─── -->
+  <div class="trust-bar">
+    <div class="trust-bar-inner">
+      <div class="trust-item"><i class="fa-solid fa-leaf"></i><span>Eco-Friendly Practices</span></div>
+      <div class="trust-item"><i class="fa-solid fa-shield-halved"></i><span>Fully Insured</span></div>
+      <div class="trust-item"><i class="fa-solid fa-clock"></i><span>On-Time, Every Time</span></div>
+      <div class="trust-item"><i class="fa-solid fa-dollar-sign"></i><span>Fair &amp; Transparent Pricing</span></div>
+    </div>
+  </div>
+
+  <!-- ─── SERVICES ─── -->
+  <section id="services" class="section services">
+    <div class="container">
+      <div class="section-header">
+        <p class="section-tag">What We Do</p>
+        <h2>Complete Yard Care Services</h2>
+        <p class="section-sub">From weekly lawn maintenance to full seasonal cleanups, we've got every corner of your yard covered.</p>
+      </div>
+      <div class="services-grid">
+        <div class="service-card">
+          <div class="service-icon"><i class="fa-solid fa-scissors"></i></div>
+          <h3>Lawn Mowing</h3>
+          <p>Clean, precise cuts that keep your grass healthy and your curb appeal strong. We edge and blow off clippings every visit.</p>
+          <ul class="service-list">
+            <li>Weekly or bi-weekly plans</li>
+            <li>Edging included</li>
+            <li>Cleanup after every cut</li>
+          </ul>
+        </div>
+        <div class="service-card featured">
+          <div class="featured-badge">Most Popular</div>
+          <div class="service-icon"><i class="fa-solid fa-wind"></i></div>
+          <h3>Leaf &amp; Debris Removal</h3>
+          <p>Full yard leaf blowing, raking, and bagging so you don't have to worry about fall cleanup ever again.</p>
+          <ul class="service-list">
+            <li>Full property coverage</li>
+            <li>Hauling included</li>
+            <li>Spring &amp; fall cleanups</li>
+          </ul>
+        </div>
+        <div class="service-card">
+          <div class="service-icon"><i class="fa-solid fa-broom"></i></div>
+          <h3>Yard Cleanup</h3>
+          <p>General yard tidying — sticks, debris, and anything else making your property look cluttered. We leave it spotless.</p>
+          <ul class="service-list">
+            <li>Debris &amp; stick removal</li>
+            <li>Garden bed cleanup</li>
+            <li>One-time or recurring</li>
+          </ul>
+        </div>
+        <div class="service-card">
+          <div class="service-icon"><i class="fa-solid fa-hand-holding-droplet"></i></div>
+          <h3>Seasonal Maintenance</h3>
+          <p>Let us handle the transition between seasons — from spring prep to winter readiness, your yard will be ready.</p>
+          <ul class="service-list">
+            <li>Spring &amp; fall prep</li>
+            <li>Mulching</li>
+            <li>Gutter clearing</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── ABOUT ─── -->
+  <section id="about" class="section about">
+    <div class="container about-inner">
+      <div class="about-visual">
+        <div class="about-img-wrap">
+          <div class="about-img-placeholder">
+            <i class="fa-solid fa-seedling"></i>
+            <span>Your team photo here</span>
+          </div>
+          <div class="about-stat-card">
+            <span class="stat-num">100%</span>
+            <span class="stat-label">Satisfaction Guarantee</span>
+          </div>
+        </div>
+      </div>
+      <div class="about-text">
+        <p class="section-tag">About Us</p>
+        <h2>Neighbors Taking Care of Neighbors</h2>
+        <p>We're Nico and Connor — two guys from Mississauga who started {{ business_name }} because we believe a well-kept yard shouldn't be a luxury. We serve all of Mississauga and the Greater Toronto Area.</p>
+        <p>Whether it's a quick weekly mow or a full seasonal cleanup, we treat your yard like it's our own. No shortcuts, no mess left behind.</p>
+        <div class="about-features">
+          <div class="about-feature"><i class="fa-solid fa-check-circle"></i><span>Based in Mississauga, serving the whole GTA</span></div>
+          <div class="about-feature"><i class="fa-solid fa-check-circle"></i><span>No contracts required</span></div>
+          <div class="about-feature"><i class="fa-solid fa-check-circle"></i><span>Free estimates, always</span></div>
+          <div class="about-feature"><i class="fa-solid fa-check-circle"></i><span>We show up when we say we will</span></div>
+        </div>
+        <a href="#contact" class="btn-primary">Work With Us</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── GALLERY ─── -->
+  <section id="gallery" class="section gallery">
+    <div class="container">
+      <div class="section-header">
+        <p class="section-tag">Our Work</p>
+        <h2>Before &amp; After</h2>
+        <p class="section-sub">See the difference we make. Every job is completed the same day — no mess left behind.</p>
+      </div>
+      <div class="ba-grid">
+
+        <div class="ba-pair">
+          <div class="ba-img-wrap">
+            <img src="{{ url_for('static', filename='images/before1.jpg') }}" alt="Before yard cleanup" />
+            <span class="ba-tag before-tag">Before</span>
+          </div>
+          <div class="ba-divider"><i class="fa-solid fa-arrow-right"></i></div>
+          <div class="ba-img-wrap after-img">
+            <img src="{{ url_for('static', filename='images/after1.jpg') }}" alt="After yard cleanup" />
+            <span class="ba-tag after-tag">After</span>
+          </div>
+        </div>
+
+        <div class="ba-pair">
+          <div class="ba-img-wrap">
+            <img src="{{ url_for('static', filename='images/before2.jpg') }}" alt="Before leaf removal" />
+            <span class="ba-tag before-tag">Before</span>
+          </div>
+          <div class="ba-divider"><i class="fa-solid fa-arrow-right"></i></div>
+          <div class="ba-img-wrap after-img">
+            <img src="{{ url_for('static', filename='images/after2.jpg') }}" alt="After leaf removal" />
+            <span class="ba-tag after-tag">After</span>
+          </div>
+        </div>
+
+        <div class="ba-pair">
+          <div class="ba-img-wrap">
+            <img src="{{ url_for('static', filename='images/before3.jpg') }}" alt="Before yard cleanup" />
+            <span class="ba-tag before-tag">Before</span>
+          </div>
+          <div class="ba-divider"><i class="fa-solid fa-arrow-right"></i></div>
+          <div class="ba-img-wrap after-img">
+            <img src="{{ url_for('static', filename='images/after3.jpg') }}" alt="After yard cleanup" />
+            <span class="ba-tag after-tag">After</span>
+          </div>
+        </div>
+
+      </div>
+      <p class="gallery-cta">📸 Follow us on Instagram for more before &amp; afters!</p>
+    </div>
+  </section>
+
+  <!-- ─── TESTIMONIALS ─── -->
+  <section class="section testimonials">
+    <div class="container">
+      <div class="section-header">
+        <p class="section-tag">What Clients Say</p>
+        <h2>Real Reviews</h2>
+      </div>
+      <div class="testimonials-grid">
+        <div class="testimonial-card featured-testimonial">
+          <div class="stars">★★★★★</div>
+          <p>"They did an incredible job on my yard. Showed up on time, cleaned everything up exactly how I wanted it, with a little bit of leafs for the nutrients. Highly recommend to anyone in the neighbourhood!"</p>
+          <div class="testimonial-author">
+            <div class="author-avatar">S</div>
+            <div>
+              <strong>Sandra Morassutti</strong>
+              <span>Mississauga, ON</span>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card cta-card">
+          <i class="fa-solid fa-star-half-stroke"></i>
+          <h3>Leave Us a Review!</h3>
+          <p>Happy with our work? Share your experience — it means the world to a small business.</p>
+          <a href="#contact" class="btn-outline-white">Get Your Yard Done</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── CONTACT / QUOTE ─── -->
+  <section id="contact" class="section contact">
+    <div class="container contact-inner">
+      <div class="contact-info">
+        <p class="section-tag">Get In Touch</p>
+        <h2>Request a Free Quote</h2>
+        <p>Tell us about your yard and we'll get back to you with pricing — fast and no pressure.</p>
+        <div class="contact-details">
+          <div class="contact-detail">
+            <div class="detail-icon"><i class="fa-solid fa-phone"></i></div>
+            <div>
+              <strong>Call or Text</strong>
+              <span>(647) 215-4544</span>
+            </div>
+          </div>
+          <div class="contact-detail">
+            <div class="detail-icon"><i class="fa-solid fa-envelope"></i></div>
+            <div>
+              <strong>Email</strong>
+              <span>Nicolas.lemieux28@icloud.com</span>
+            </div>
+          </div>
+          <div class="contact-detail">
+            <div class="detail-icon"><i class="fa-brands fa-instagram"></i></div>
+            <div>
+              <strong>Instagram</strong>
+              <span>@yourusername</span>
+            </div>
+          </div>
+          <div class="contact-detail">
+            <div class="detail-icon"><i class="fa-solid fa-clock"></i></div>
+            <div>
+              <strong>Hours</strong>
+              <span>Mon–Sun, 8am – 9pm</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="contact-form-wrap">
+        <form id="quote-form" class="quote-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="name">Your Name *</label>
+              <input type="text" id="name" name="name" placeholder="John Smith" required />
+            </div>
+            <div class="form-group">
+              <label for="email">Email *</label>
+              <input type="email" id="email" name="email" placeholder="john@email.com" required />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="phone">Phone</label>
+              <input type="tel" id="phone" name="phone" placeholder="(555) 123-4567" />
+            </div>
+            <div class="form-group">
+              <label for="preferred_date">Preferred Date</label>
+              <input type="date" id="preferred_date" name="preferred_date" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="address">Property Address</label>
+            <input type="text" id="address" name="address" placeholder="123 Maple Street" />
+          </div>
+          <div class="form-group">
+            <label>Services Needed</label>
+            <div class="checkboxes">
+              <label class="checkbox-label"><input type="checkbox" value="Lawn Mowing" /> Lawn Mowing</label>
+              <label class="checkbox-label"><input type="checkbox" value="Leaf Removal" /> Leaf Removal</label>
+              <label class="checkbox-label"><input type="checkbox" value="Yard Cleanup" /> Yard Cleanup</label>
+              <label class="checkbox-label"><input type="checkbox" value="Seasonal Maintenance" /> Seasonal Maintenance</label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="message">Additional Details</label>
+            <textarea id="message" name="message" rows="4" placeholder="Tell us about your yard size, special requests, or anything we should know..."></textarea>
+          </div>
+          <button type="submit" class="btn-primary btn-full" id="submit-btn">
+            <span class="btn-text">Send Quote Request</span>
+            <i class="fa-solid fa-paper-plane"></i>
+          </button>
+          <div id="form-message" class="form-message hidden"></div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── FOOTER ─── -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <a class="logo" href="#home">
+          <span class="logo-leaf">🌿</span>
+          <span>{{ business_name }}</span>
+        </a>
+        <p>Keeping yards beautiful, one property at a time.</p>
+        <div class="social-links">
+          <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook"></i></a>
+        </div>
+      </div>
+      <div class="footer-links">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="#home">Home</a></li>
+          <li><a href="#services">Services</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#contact">Get a Quote</a></li>
+        </ul>
+      </div>
+      <div class="footer-services">
+        <h4>Services</h4>
+        <ul>
+          <li>Lawn Mowing</li>
+          <li>Leaf Removal</li>
+          <li>Yard Cleanup</li>
+          <li>Seasonal Maintenance</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2025 {{ business_name }}. All rights reserved.</p>
+      <a href="/admin" class="admin-link">Admin</a>
+    </div>
+  </footer>
+
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
