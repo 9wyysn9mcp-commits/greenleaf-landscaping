@@ -21,7 +21,7 @@ SMTP_PASSWORD   = os.environ.get("SMTP_PASSWORD", "yiat-vmdc-xtas-smsi")
 SMTP_HOST       = "smtp.mail.me.com"
 SMTP_PORT       = 587
 
-DB_PATH = os.path.join(os.path.dirname(__file__), "quotes.db")
+DB_PATH = os.environ.get("DB_PATH", os.path.join(os.path.dirname(__file__), "quotes.db"))
 
 
 def get_db():
