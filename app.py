@@ -68,10 +68,9 @@ Reply directly to {email} or call/text {phone}.
     payload = json.dumps({
         "from":    "GreenLeaf Landscaping <quotes@greenleafgta.ca>",
         "to":      [NOTIFY_EMAIL],
-        "subject": f"New Quote Request — {name}",
+        "subject": f"New Quote Request - {name}",
         "text":    body,
-        "reply_to": email,
-    }).encode()
+    }).encode("utf-8")
 
     req = urllib.request.Request(
         "https://api.resend.com/emails",
