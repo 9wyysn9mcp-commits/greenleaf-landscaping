@@ -78,6 +78,7 @@ Reply directly to {email} or call/text {phone}.
         headers={
             "Authorization": f"Bearer {RESEND_API_KEY}",
             "Content-Type":  "application/json",
+            "User-Agent":    "GreenLeaf-Landscaping/1.0",
         },
     )
     try:
