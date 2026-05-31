@@ -47,6 +47,7 @@ def _send_email(name, email, phone, address, services, message, preferred_date):
     if not RESEND_API_KEY:
         print("[email] No RESEND_API_KEY set, skipping.")
         return
+    print(f"[email] Using key: {RESEND_API_KEY[:8]}...")
 
     body = f"""New quote request from your website!
 
@@ -83,6 +84,9 @@ Reply directly to {email} or call/text {phone}.
     try:
         with urllib.request.urlopen(req, timeout=10) as res:
             print(f"[email] Sent — status {res.status}")
+    except urllib.error.HTTPError as e:
+        body = e.read().decode()
+        print(f"[email] Failed: {e} — {body}")
     except Exception as e:
         print(f"[email] Failed: {e}")
 
